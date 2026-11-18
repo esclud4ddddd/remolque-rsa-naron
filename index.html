@@ -80,6 +80,8 @@
   #tourProg i{display:block;height:100%;width:0;background:#c8102e}
   #tourBtns{position:absolute;right:14px;top:12px;display:flex;gap:6px;z-index:6}
   #tourBtns button{background:#c8102e;color:#fff;border-color:#c8102e;font-weight:600}
+  #toast{position:absolute;left:50%;top:14px;transform:translateX(-50%);background:#c8102e;color:#fff;font-weight:600;font-size:14px;padding:9px 14px;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,.2);opacity:0;pointer-events:none;transition:opacity .2s;z-index:7}
+  #toast.on{opacity:1}
   #hint{position:absolute;left:14px;top:12px;font-size:12px;color:var(--mut);background:rgba(255,255,255,.85);padding:5px 9px;border-radius:7px}
   #load{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:14px}
   @media (max-width:820px){
@@ -137,6 +139,7 @@
   <canvas id="c"></canvas>
     <div id="hint">Toca una persiana o el portón para abrir/cerrar · toca un material para ver su ficha</div>
   <div id="card" hidden></div>
+  <div id="toast"></div>
 </main>
 <div id="sheets"><div class="top"><b>Fichas técnicas · Remolque RSA SPEIS Narón</b><button id="closeSheets">Cerrar</button></div><div class="wrap" id="sheetsWrap"></div></div>
 
@@ -544,8 +547,8 @@ B(0.95,0.28,0.50,0.38,0.02,0.52,'#b01822','trineo'); B(0.951,0.04,0.501,0.38,0.1
 B(0.10,0.03,0.04,0.38,0.30,0.775,'#151515','trineo');
 const rope=add(new THREE.Mesh(new THREE.TorusGeometry(0.10,0.035,10,28),mat('#f05a28')),0.99,0.055,0.50,'mantas'); rope.rotation.x=Math.PI/2;
 [['Botas EVO4\npares 1–6','escarpines'],['Botas EVO4\npares 7–12','escarpines'],['Aletas +\nportaaletas','aletas']].forEach(([txt,key],k)=>{ const cx=-0.10+0.205+k*0.41, y=0.345;
-  [-1,1].forEach(s=>B(0.02,0.012,0.62,cx+0.19*s,y-0.012,0.47,alu)); labelBox(0.38,0.31,0.60,cx,y,0.47,'#7a828a',txt,4,key); });
-labelBox(0.38,0.21,0.60,0.105,0.718,0.47,'#7a828a','Guantes\n5 mm',4,'guantes5'); labelBox(0.38,0.21,0.60,0.515,0.718,0.47,'#7a828a','Guantes\n2 mm',4,'guantes2');
+  [-1,1].forEach(s=>B(0.02,0.012,0.62,cx+0.19*s,y-0.012,0.47,alu)); });
+
 B(0.36,0.12,0.42,0.925,0.718,0.45,'#8d8780','mantas'); B(0.362,0.02,0.422,0.925,0.78,0.45,'#c0504d','mantas');
 B(0.12,0.04,0.12,1.215,0.718,0.62,'#333','emisora'); B(0.06,0.13,0.03,1.215,0.758,0.62,'#3a4652','emisora');
 add(new THREE.Mesh(new THREE.SphereGeometry(0.075,20,14),mat('#ffd400')),1.215,0.095,0.62,'boya');
@@ -691,6 +694,19 @@ ITEMS.casco.filter(m=>m.geometry.type==='SphereGeometry').forEach((m,i)=>{ const
   reg(base,'casco'); reg(led,'casco'); helmetLeds.push({led,ph:(i%6)*0.13}); });
 function updateHelmetLeds(t){ helmetLeds.forEach(h=>{ const p=((t+h.ph)%1.1)/1.1, on=p<0.06||(p>0.12&&p<0.18); h.led.material.emissiveIntensity=on?4:0; }); }
 function updateDrawers(){ drawers.forEach(d=>{ d.t+=((d.open?1:0)-d.t)*0.14; d.g.position.copy(d.base).addScaledVector(d.dir,d.dist*d.t); }); }
+
+// modelo 1: sus cajas también son cajones que salen hacia la persiana izquierda
+[[0.105,0.345,0.31,'Botas EVO4\npares 1–6','escarpines',bootsIn],[0.515,0.345,0.31,'Botas EVO4\npares 7–12','escarpines',bootsIn],[0.925,0.345,0.31,'Aletas +\nportaaletas','aletas',finsIn],
+ [0.105,0.718,0.21,'Guantes\n5 mm','guantes5',d=>glovesIn(d,'#2a2a2a')],[0.515,0.718,0.21,'Guantes\n2 mm','guantes2',d=>glovesIn(d,'#e6e6e6')]]
+.forEach(([x,y,h,txt,key,fill])=>{ const d=mkDrawer(M1,x,y,0.47,[0,0,1],0.30); d.key=key; openBox(d,0.38,h,0.60,'#7a828a',txt,4,key);
+  const sub=new THREE.Group(); sub.rotation.y=Math.PI/2; d.g.add(sub); fill({g:sub,key}); tagDrawer(d); });
+// no se cierra una persiana ni el portón con cajones abiertos de ese lado
+const sideOf=d=> d.dir.x>0?'T':(d.dir.z<0?'R':'L');
+const openDrawersOn=k=>drawers.filter(d=>d.open && isVis(d.g) && sideOf(d)===k);
+function setDoor(k,v){ if(!v && target[k] && openDrawersOn(k).length){ toast(k==='T'?'Cierra primero las baldas que salen por el portón':'Cierra primero los cajones abiertos de ese lado'); return false; }
+  target[k]=v; if(k==='T'&&!v) lonaOn=false; return true; }
+let toastT=0;
+function toast(msg){ const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('on'); clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove('on'),2200); }
 
 // ---------- cambio de modelo
 function setModel(n){ MODEL=n; M1.visible=M1door.visible=n===1; M2.visible=n===2; ZONES=n===1?ZONES1:ZONES2;
@@ -871,7 +887,7 @@ const state={R:0,L:0,T:0}, target={R:0,L:0,T:0};
 let shellOn=true, lonaOn=false, dimsOn=false, camGoal=null, selected=null;
 const doorsEl=document.getElementById('doors');
 [['R','Persiana dcha. (acera)'],['L','Persiana izq.'],['T','Portón trasero']].forEach(([k,l])=>{const b=document.createElement('button');b.textContent=l;b.dataset.k=k;
-  b.onclick=()=>{target[k]=target[k]?0:1; if(k==='T'&&!target.T) lonaOn=false; sync();};doorsEl.appendChild(b);});
+  b.onclick=()=>{setDoor(k,target[k]?0:1); sync(); buildDims();};doorsEl.appendChild(b);});
 const mkBtn=(t,fn)=>{const b=document.createElement('button');b.textContent=t;b.onclick=fn;doorsEl.appendChild(b);return b;};
 const lonaBtn=mkBtn('Lona vestuario',()=>{lonaOn=!lonaOn; if(lonaOn) target.T=1; sync(); buildDims();});
 const dimsBtn=mkBtn('Cotas',()=>{dimsOn=!dimsOn;sync();});
@@ -895,7 +911,7 @@ const VIEWS=[
 ];
 const viewsEl=document.getElementById('views');
 VIEWS.forEach(([n,p,t,d,sh,ln])=>{const b=document.createElement('button');b.textContent=n;b.onclick=()=>{
-  Object.assign(target,d); shellOn=sh; lonaOn=ln; sync(); buildDims(); camGoal={p:new THREE.Vector3(...p),t:new THREE.Vector3(...t)}; };viewsEl.appendChild(b);});
+  Object.entries(d).forEach(([k,v])=>setDoor(k,v)); shellOn=sh; lonaOn=ln&&target.T===1; sync(); buildDims(); camGoal={p:new THREE.Vector3(...p),t:new THREE.Vector3(...t)}; };viewsEl.appendChild(b);});
 
 /* ---------- lista lateral ---------- */
 function renderZones(){
@@ -1031,8 +1047,8 @@ canvas.addEventListener('pointerup',e=>{
   const o=hit.object, it=o.userData.item;
   if(o.userData.drawer){ const d=o.userData.drawer; d.open=!d.open; if(d.dir.x>0&&d.open) target.T=1; if(d.dir.z<0&&d.open) target.R=1; if(d.dir.z>0&&d.open) target.L=1; sync(); if(it) select(it); return; }
   if(o.userData.curtain){ pokeCurtain(hit,0.16); lonaOn=false; sync(); buildDims(); return; }        // toque en la cortina: sube
-  if(o.userData.side){ const k=o.userData.side; target[k]=target[k]?0:1; sync(); return; }            // toque en el lateral: persiana arriba / abajo
-  if(o===doorPanel||o===doorVinyl){ target.T=target.T?0:1; if(!target.T) lonaOn=false; sync(); buildDims(); return; } // portón: abre / cierra
+  if(o.userData.side){ const k=o.userData.side; setDoor(k,target[k]?0:1); sync(); return; }            // toque en el lateral: persiana arriba / abajo
+  if(o===doorPanel||o===doorVinyl){ setDoor('T',target.T?0:1); sync(); buildDims(); return; } // portón: abre / cierra
   if(o===roll){ if(!target.T) target.T=1; lonaOn=!lonaOn; sync(); buildDims(); if(lonaOn) select('lona'); return; }     // funda: baja / sube la lona
   if(it in LZ){ LZ[it]=!LZ[it]; applyLights(); sync(); return; }
   select(hit.object.userData.item || 'remolque');
