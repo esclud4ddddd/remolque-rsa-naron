@@ -214,8 +214,10 @@ const INFO = {
     f:['Linternas de mano en cargador fijo de 12 V','Dime el modelo y añado su ficha y su foto'],src:null},
   sucio:{n:'Bolsas para ropa sucia',q:'6',s:'Lado izquierdo, zona delantera, balda de arriba',m:'—',
     f:['Bolsas estancas para meter neoprenos, trajes y toallas mojados o sucios después del servicio'],src:null},
-  sillas:{n:'Sillas plegables',q:'2',s:'Lado izquierdo, de pie contra la pared, junto al portón',m:'Plegada ≈ 45 × 82 × 5 cm',
+  sillas:{n:'Sillas plegables',q:'2',s:'Lado izquierdo, planas contra el tabique junto al portón, al lado de la cajonera de botas',m:'Plegada ≈ 45 × 82 × 5 cm',
     f:['Para sentarse a ponerse el traje y las botas en el vestuario'],src:null},
+  ropa:{n:'Cajas de ropa limpia',q:'2',s:'Centro, balda de arriba del todo, junto a los trajes (se cogen al abrir el portón)',m:'36 × 62 × 12 cm cada una',
+    f:['Ropa seca de recambio para después del servicio: térmicas, calcetines, toallas','Cajas grises rotuladas «ROPA LIMPIA»'],src:null},
   aseo:{n:'Toallas y bolsa de aseo',q:'2 toallas + 1 bolsa',s:'Centro, balda de arriba del todo, junto a los trajes (se coge al abrir el portón)',m:'Balda 75 × 64 cm',
     f:['Toallas para secarse en el vestuario del portón','Bolsa de aseo: gel, champú, bolsas para la ropa mojada…'],src:null},
   lona:{n:'Lona vestuario del portón',q:'1',s:'Va enrollada en una funda en el borde del portón; al abrirlo bajan las cortinas desde sus 3 bordes',m:'≈ 116 × 157 × 173 cm',
@@ -252,7 +254,7 @@ const ICON_OF = {casco:'casco',drysuit:'traje',neopreno:'traje',vadeador:'traje'
 const iconSvg = (k,size) => `<svg viewBox="0 0 64 64" width="${size}" height="${size}" fill="none" stroke="#c8102e" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">${ICON_PATH[ICON_OF[k]]||''}</svg>`;
 const ZONES2 = [
   {id:'R',c:'#e2312f',name:'Lado derecho (acera) · EPI',desc:'Cascos, chalecos, guantes, botas y aletas en baldas y cajas',door:'R',items:['casco','gafas','chaleco','cuchillo','cowtail','guantes5','guantes2','bolsa','escarpines','aletas','emisora','linternas','mantas']},
-  {id:'C',c:'#8a5cd6',name:'Centro · baldas extraíbles desde el portón',desc:'Trajes secos y neoprenos acostados; camillas en la balda de abajo',door:'T',items:['drysuit','neopreno','espinal','palas','aseo']},
+  {id:'C',c:'#8a5cd6',name:'Centro · baldas extraíbles desde el portón',desc:'Trajes secos y neoprenos acostados; camillas en la balda de abajo',door:'T',items:['drysuit','neopreno','espinal','palas','ropa']},
   {id:'L',c:'#2f7de2',name:'Lado izquierdo · material de rescate',desc:'Trineo con su botella, cuerdas, bolsas de sucio, palas, pértiga, bastón, flopis, boya, vadeadores y sillas',door:'L',items:['trineo','botella','cuerdas','sucio','remo','pertiga','baston','tubo','boya','vadeador','sillas']},
   {id:'T',c:'#f0a500',name:'Portón trasero + lona vestuario',desc:'Al abrir el portón quedan a mano las baldas de los trajes',door:'T',items:['lona']},
   {id:'X',c:'#1fa37a',name:'Exterior',desc:'Techo y caja',door:null,items:['tabla','estroboslat','estrobos','remolque']}
@@ -264,7 +266,7 @@ const LOC2 = {
   casco:'Lado derecho, columna delantera, balda de arriba (6 en fila), con su estroboscópico arriba', gafas:'Lado derecho, balda de arriba, detrás de cada casco',
   chaleco:'Lado derecho, columna delantera, balda del medio: 6 de pie, como libros', cuchillo:'Montado en cada chaleco', cowtail:'Enganchada en cada chaleco',
   aletas:'Lado derecho, columna delantera, abajo: 2 cajas 60 × 40 con su cinturón portaaletas',
-  escarpines:'Lado derecho, columna central, abajo: 2 cajas 60 × 40', guantes5:'Lado derecho, columna central, balda del medio (caja baja)', guantes2:'Lado derecho, columna central, balda del medio (caja baja)',
+  escarpines:'Lado derecho, columna central (2 cajas) y cajonera de 4 cajones junto al portón, en el lado izquierdo (salen hacia el portón)', guantes5:'Lado derecho, columna central, balda del medio (caja baja)', guantes2:'Lado derecho, columna central, balda del medio (caja baja)',
   emisora:'Lado derecho, hueco del fondo, balda de arriba: 3 emisoras en sus cargadores', mantas:'Lado derecho, hueco del fondo, abajo',
   trineo:'Lado izquierdo, zona delantera (la más honda): bolsa de 95 cm metida hacia dentro',
   bolsa:'Lado derecho, columna central, balda de arriba, encima de los guantes (6 bolsas)', boya:'Lado izquierdo, en el suelo debajo de los flopis',
@@ -301,10 +303,10 @@ const FURN1 = [
 ];
 const FURN2 = [
   ['Tabiques','2 tabiques a lo largo: z dcho. a 40 cm de la persiana (2,92 m) e izq. a 50 cm (2,02 m) · altura 110 cm'],
-  ['Centro (portón)','6 baldas extraíbles de 200 × 64 cm cada 17 cm (salen 75 cm por el portón): camillas abajo, 3 de trajes secos (2 por balda) y 2 de neoprenos (4 + 3) · arriba balda de 75 cm para toallas y aseo'],
+  ['Centro (portón)','6 baldas extraíbles de 200 × 64 cm cada 17 cm (salen 75 cm por el portón): camillas abajo, 3 de trajes secos (2 por balda) y 2 de neoprenos (4 + 3) · arriba 2 cajas grises de ropa limpia'],
   ['Lado dcho. (40 cm fondo)','3 columnas: 120 cm (cajones de aletas / chalecos / cascos con estrobo) · 120 cm (cajones de botas / cajones de guantes / bolsas de lanzamiento) · 48 cm (mantas / emisora) · cajones sobre guías que salen 30 cm'],
   ['Lado izq. delante','zona de 90 × 116 cm de fondo: trineo en su bolsa + botellero de aire (2 cunas y cinchas) · balda a 33 cm con 2 cajones de cuerdas · balda a 62 cm (boya)'],
-  ['Lado izq. resto (50 cm fondo)','bandeja alta bajo el techo (palas, pértiga, bastón) · flopis colgados del tabique con la boya debajo · barra de vadeadores pegada a los flopis · 2 sillas plegables de pie junto al portón'],
+  ['Lado izq. resto (50 cm fondo)','bandeja alta bajo el techo (palas, pértiga, bastón) · flopis colgados del tabique con la boya debajo · barra de vadeadores pegada a los flopis · 2 sillas plegables planas contra el tabique · cajonera de 4 cajones (42 × 28 × 86 cm) que salen hacia el portón'],
   ['Techo exterior','2 barras portacargas + almohadillas + 2 cinchas (tabla 320 × 55 × 19)']
 ];
 
@@ -616,10 +618,9 @@ const trays=LV.map((y,i)=>{ const d=mkDrawer(M2,0,0,0,[1,0,0],0.75), g=d.g;
   B(1.65,0.033,0.50,x,y,-0.05,'#1c1c1c','neopreno',g); B(0.30,0.034,0.502,x+0.45,y,-0.05,'#7bd321','neopreno',g); B(0.25,0.034,0.502,x-0.55,y,-0.05,'#7bd321','neopreno',g); } });
 ['Camillas','Secos 1–2','Secos 3–4','Secos 5–6','Neoprenos 1–4','Neoprenos 5–7'].forEach((t,i)=>{ const p=tag2(t,1.478,LV[i]+0.125,0.15,Math.PI/2,0.22); M2.remove(p); trays[i].g.add(p); });
 trays.forEach(tagDrawer);
-// arriba del todo, junto a los trajes: toallas y bolsa de aseo
+// arriba del todo, junto a los trajes: 2 cajas grises de ropa limpia que llenan el hueco
 B2(0.75,0.012,0.64,1.08,1.0,-0.05,shelfM);
-[0,1].forEach(k=>{ B2(0.34,0.05,0.28,1.25,1.012+k*0.05,-0.20,k?'#2f7de2':'#e8eef3','aseo'); B2(0.342,0.012,0.282,1.25,1.035+k*0.05,-0.20,k?'#1f5fb8':'#cfd8df','aseo'); });
-label2(0.28,0.12,0.24,1.25,1.012,0.13,'#16181b','ASEO',0,'aseo');
+[0.89,1.265].forEach(x=>label2(0.365,0.125,0.62,x,1.012,-0.05,'#8a9097','ROPA\nLIMPIA',0,'ropa'));
 // LADO DERECHO (40 cm de fondo)
 const RZ=-0.585, RD=0.39;
 [-1.46,-0.25,0.97,1.46].forEach(x=>B2(0.012,0.93,RD,x,0,RZ,panel));
@@ -677,15 +678,24 @@ B2(2.90,0.008,0.26,0,0.934,0.43,alu);
 [0.62,0.45].forEach(y=>{ const m=[0,1,2,3,4,5].map(()=>mat('#f5d000')); m[4]=labelMat('RESCUE','#f5d000');
   B(1.0,0.13,0.07,0.05,y,0.33,m,'tubo',M2); [-0.35,0.35].forEach(dx=>B2(0.03,0.15,0.02,0.05+dx,y-0.01,0.30,'#222')); });
 // vadeadores colgados, un poco más hacia dentro
-const VZ=0.50;
+const VZ=0.56;   // perchas separadas del tabique para dejar sitio a las sillas
 { const bar=add(new THREE.Mesh(new THREE.CylinderGeometry(0.0125,0.0125,0.62,12),alu),0.87,0.88,VZ,null,M2); bar.rotation.z=Math.PI/2; }
 for(let i=0;i<6;i++){ const x=0.62+i*0.10; B2(0.07,0.64,0.40,x,0.22,VZ,'#3d4a3a','vadeador'); B2(0.10,0.20,0.26,x,0.02,VZ-0.02,'#121212','vadeador'); B2(0.01,0.02,0.40,x,0.86,VZ,alu); }
-// 2 sillas plegables de pie contra la pared, junto al portón
-[1.30,1.37].forEach(x=>{ const c=new THREE.Group(); c.position.set(x,0,0.535); M2.add(c);
-  [[-0.20],[0.20]].forEach(([dz])=>{ const leg=new THREE.Mesh(new THREE.BoxGeometry(0.02,0.82,0.02),mat('#2b2d30')); leg.position.set(0,0.41,dz); c.add(leg); });
-  const seat=new THREE.Mesh(new THREE.BoxGeometry(0.03,0.40,0.40),mat('#c8102e')); seat.position.set(0,0.36,0); c.add(seat);
-  const back=new THREE.Mesh(new THREE.BoxGeometry(0.03,0.20,0.40),mat('#c8102e')); back.position.set(0.012,0.70,0); c.add(back);
+// 2 sillas plegables planas contra el tabique, junto al portón
+[0.305,0.333].forEach(z=>{ const c=new THREE.Group(); c.position.set(1.22,0,z); c.rotation.y=Math.PI/2; M2.add(c);
+  [-0.20,0.20].forEach(dz=>{ const leg=new THREE.Mesh(new THREE.BoxGeometry(0.02,0.82,0.02),mat('#2b2d30')); leg.position.set(0,0.41,dz); c.add(leg); });
+  const seat=new THREE.Mesh(new THREE.BoxGeometry(0.02,0.40,0.40),mat('#c8102e')); seat.position.set(0,0.36,0); c.add(seat);
+  const back=new THREE.Mesh(new THREE.BoxGeometry(0.02,0.20,0.40),mat('#c8102e')); back.position.set(0,0.70,0); c.add(back);
   c.traverse(m=>{ if(m.isMesh){ m.castShadow=true; reg(m,'sillas'); } }); });
+// cajonera de 4 cajones (botas y escarpines) al lado de las sillas: salen hacia el portón, como los neoprenos
+{ const cx=1.31, cz=0.575, W=0.42, Dx=0.28;
+  [cz-W/2-0.006, cz+W/2+0.006].forEach(z=>B2(0.29,0.86,0.012,cx,0.0,z,panel)); B2(0.29,0.012,W+0.024,cx,0.86,cz,shelfM);
+  const lab=['Botas\npares 1–3','Botas\npares 4–6','Escarpines\npares 1–6','Escarpines\npares 7–12'];
+  [0.03,0.235,0.44,0.645].forEach((y,i)=>{ const d=mkDrawer(M2,cx,y,cz,[1,0,0],0.26); d.key='escarpines';
+    const inner=new THREE.Group(); inner.rotation.y=Math.PI/2; d.g.add(inner); const p={g:inner};
+    openBox(p,W,0.18,Dx,'#7a828a',lab[i],4,'escarpines');
+    const n=i<2?3:3; for(let k=0;k<n;k++) [-1,1].forEach(e=>B(0.075,0.11,0.24,-0.13+k*0.13+e*0.04,0.01,0,i<2?'#2a2a2a':'#141414','escarpines',inner));
+    tagDrawer(d); }); }
 // estroboscópicos en lo alto de cada casco (modelo 1 y 2)
 const helmetLeds=[];
 ITEMS.casco.filter(m=>m.geometry.type==='SphereGeometry').forEach((m,i)=>{ const r=m.geometry.parameters.radius;
